@@ -1,0 +1,5 @@
+"0","maize_data  %>% "
+"0","  ggplot(aes(`Mycorrhizal treatment`, `Root:shoot ratio`, `Soil P addition treatment`)) +"
+"0","  geom_boxplot()+"
+"0","  theme_bw()"
+"0",""

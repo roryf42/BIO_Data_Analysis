@@ -1,0 +1,7 @@
+"0","test2 <- maize_data %>% "
+"0","  group_by(`Mycorrhizal treatment`,`Soil P addition treatment`)"
+"0",""
+"0","test2 %>% "
+"0","  ggplot(aes(`Mycorrhizal treatment`, `Root:shoot ratio`)) +"
+"0","  geom_boxplot()+"
+"0","  theme_bw()"

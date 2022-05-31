@@ -1,0 +1,5 @@
+"0","summary_table %>% "
+"0","  ggplot(aes(`Soil P addition treatment`, `Mean`, ymin = (`Mean`-`SE`), ymax = (`Mean`+`SE`), colour = `Mycorrhizal treatment`)) +"
+"0","  geom_pointrange(position = ""jitter"") +"
+"0","  theme_bw() +"
+"0","  ylab(""Mean Root:shoot ratio"")"

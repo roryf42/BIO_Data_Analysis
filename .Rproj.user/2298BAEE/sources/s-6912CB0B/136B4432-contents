@@ -1,0 +1,94 @@
+---
+title: "R Notebook"
+output:
+  word_document: default
+  html_notebook: default
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r setup, include=FALSE}
+
+# DON'T CHANGE ANYTHING IN THIS CHUNK (include=false tells RStudio to run the code but exclude the chunk from HTML output)
+
+# load required packages
+library(tidyverse)
+library(ggResidpanel)
+library(car)
+library(emmeans)
+```
+
+```{r}
+library(readr)
+maize_data <- read_csv("maize_data.csv")
+View(maize_data)
+glimpse(maize_data)
+```
+```{r}
+summary_table <- maize_data %>% 
+  group_by(`Mycorrhizal treatment`,`Soil P addition treatment`) %>% 
+  summarise(Mean = mean(`Root:shoot ratio`, na.rm = TRUE),
+            n = sum(!is.na(`Root:shoot ratio`)),
+            sd = sd(`Root:shoot ratio`, na.rm = TRUE),
+            SE = sd/sqrt(n))
+summary_table
+```
+
+```{r}
+maize.aov <- lm(`Root:shoot ratio` ~ `Combination`,
+                data = maize_data,
+                contrasts = list(`Combination` = "contr.sum"))
+maize.aov
+resid_panel(maize.aov, plots = c("resid", "qq"))
+Anova(maize.aov)
+```
+
+```{r}
+maize.aov <- lm(`Root:shoot ratio` ~ `Combination`,
+                data = maize_data,
+                contrasts = list(`Combination` = "contr.sum"))
+
+means <- emmeans(maize.aov, specs = "Combination")
+means
+pairs(means, adjust = "tukey")
+```
+
+
+```{r}
+summary_table %>% 
+  ggplot(aes(`Soil P addition treatment`, `Mean`, ymin = (`Mean`-`SE`), ymax = (`Mean`+`SE`), colour = `Mycorrhizal treatment`)) +
+  geom_pointrange(position = "jitter") +
+  theme_bw() +
+  ylab("Mean Root:shoot ratio")
+```
+
+
+```{r}
+maize_data  %>% 
+  ggplot(aes(`Combination`, `Root:shoot ratio`, colour = `Mycorrhizal treatment`)) +
+  geom_boxplot()+
+  theme_bw() +
+  xlab(label = "Treatment")
+```
+
+
+```{r}
+maize_data  %>% 
+  ggplot(aes(`Mycorrhizal treatment`, `Root:shoot ratio`, `Soil P addition treatment`)) +
+  geom_boxplot()+
+  theme_bw()
+
+```
+
+```{r}
+test2 <- maize_data %>% 
+  group_by(`Mycorrhizal treatment`,`Soil P addition treatment`)
+
+test2 %>% 
+  ggplot(aes(`Mycorrhizal treatment`, `Root:shoot ratio`)) +
+  geom_boxplot()+
+  theme_bw()
+```
+
